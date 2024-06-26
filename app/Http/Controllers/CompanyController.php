@@ -2,122 +2,57 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
-use App\Models\CustomField;
-use Illuminate\Http\Request;
+use App\Http\Requests\CompanyCreateRequest;
+use App\Http\Requests\CompanyUpdateReques;
+use App\Services\CompanyService;
 
 class CompanyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    private $pagination = 2;
+    protected $companyService;
+
+    public function __construct(CompanyService $companyService)
+    {
+        $this->companyService = $companyService;
+    }
+
     public function index()
     {
-        $companies = Company::with('customFields')
-            ->paginate($this->pagination);
+        $companies = $this->companyService->index();
         return view('company.index', compact('companies'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        return view('company.create');
+        return $this->companyService->create();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Responses
-     */
-    public function store(Request $request)
+    public function store(CompanyCreateRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'address'     =>  'required',
-        ]);
-
-        $company = Company::create($request->only('name', 'address'));
-
-        foreach ($request->custom_fields as $field) {
-            CustomField::create([
-                'company_id' => $company->id,
-                'field_name' => $field['field_name'],
-                'field_type' => $field['field_type'],
-            ]);
-        }
-
-        return redirect()->route('company.index')->with('success', 'Company Added successfully.');
+        $company = $this->companyService->store($request);
+        return redirect()->route('company.index')->with('success', 'Company added successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        $company = Company::find($id);
+        $company = $this->companyService->show($id);
         return view('company.show', compact('company'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        $company = Company::find($id);
+        $company = $this->companyService->edit($id);
         return view('company.edit', compact('company'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(CompanyUpdateReques $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'address'     =>  'required',
-        ]);
-
-        $company = Company::findOrFail($id);
-        foreach ($request->custom_fields as $fieldData) {
-            $company->customFields()->updateOrCreate(
-                ['id' => $fieldData['field_id'] ?? null],
-                ['field_name' => $fieldData['field_name'], 'field_type' => $fieldData['field_type']]
-            );
-        }
-        $company->update($request->only('name', 'address'));
-
-        return redirect()->route('company.index')->with('success', 'Company Updated successfully.');
+        $company = $this->companyService->update($request, $id);
+        return redirect()->route('company.index')->with('success', 'Company updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        $company = Company::find($id);
-        $company->delete();
-
-        return redirect()->back()->with('success', 'Company Deleted successfully.');
+        $this->companyService->destroy($id);
+        return redirect()->back()->with('success', 'Company deleted successfully.');
     }
 }
