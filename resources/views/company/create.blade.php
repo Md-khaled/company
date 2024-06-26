@@ -55,6 +55,12 @@
                             </select>
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-label-form">Field Value</label>
+                        <div  class="col-sm-10">
+                            <input type="text" name="custom_fields[0][field_value]" class="form-control" required>
+                        </div>
+                    </div>
                     <div id="custom-fields"></div>
 
                     <button type="button" class="btn btn-secondary pull-right" id="add-custom-field">Add Custom Field</button>
@@ -77,7 +83,7 @@
                 const customFieldHtml = `
                 <div class="form-group mb-1 custom-field">
                  <div class="row mb-3">
-                        <label class="col-sm-2 col-label-form">Field Nam - ${customFieldIndex}</label>
+                        <label class="col-sm-2 col-label-form">Field Name - ${customFieldIndex}</label>
                         <div  class="col-sm-10">
                             <input type="text" name="custom_fields[${customFieldIndex}][field_name]" class="form-control" required>
                         </div>
@@ -91,6 +97,12 @@
                         @endforeach
                 </select>
         </div>
+        <div class="row mb-3">
+                        <label class="col-sm-2 col-label-form">Field Value - ${customFieldIndex}</label>
+                        <div  class="col-sm-10">
+                            <input type="text" name="custom_fields[${customFieldIndex}][field_value]" class="form-control" required>
+                        </div>
+                    </div>
     </div>
                 <button type="button" class="btn btn-sm btn-danger mt-2 float-end remove-custom-field">Remove</button>
 

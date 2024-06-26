@@ -15,9 +15,10 @@ class CreateCustomFieldsTable extends Migration
     {
         Schema::create('custom_fields', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->onDelete('cascade');
+            $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
             $table->string('field_name');
-            $table->string('field_type')->default('varchar');
+            $table->string('field_type')->nullable();
+            $table->string('field_value')->nullable();
             $table->timestamps();
         });
     }

@@ -26,7 +26,9 @@ class CompanyUpdateReques extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'custom_fields' => 'nullable|array',
+            'custom_fields.*.field_name' => 'required|string|max:255',
+            'custom_fields.*.field_type' => 'required|string|max:255',
+            'custom_fields.*.field_value' => 'required|string|max:255',
         ];
     }
 }

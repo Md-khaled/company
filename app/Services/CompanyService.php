@@ -72,7 +72,11 @@ class CompanyService
             foreach ($customFields as $field) {
                 $company->customFields()->updateOrCreate(
                     ['id' => $field['field_id'] ?? null],
-                    ['field_name' => $field['field_name'], 'field_type' => $field['field_type']]
+                    [
+                        'field_name' => $field['field_name'],
+                        'field_type' => $field['field_type'],
+                        'field_value' => $field['field_value'],
+                    ]
                 );
             }
         }

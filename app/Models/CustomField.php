@@ -9,15 +9,15 @@ class CustomField extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'field_name', 'field_type'];
+    protected $fillable = ['company_id', 'field_name', 'field_type', 'field_value'];
 
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
-    public function values()
+    public function customFieldValues()
     {
-        return $this->hasMany(CustomFieldValue::class, 'field_id');
+        return $this->hasMany(CustomFieldValue::class);
     }
 }
