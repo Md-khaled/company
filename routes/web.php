@@ -19,3 +19,9 @@ Route::get('/', function () {
 });
 
 Route::resource('company', CompanyController::class);
+
+Route::post('companies/{company}/custom-fields', [CustomFieldController::class, 'store']);
+Route::get('companies/{company}/custom-fields', [CustomFieldController::class, 'getFields']);
+
+Route::post('companies/{company}/custom-fields/{field}/values', [CustomFieldValueController::class, 'store']);
+Route::get('companies/{company}/custom-fields/values', [CustomFieldValueController::class, 'getValues']);

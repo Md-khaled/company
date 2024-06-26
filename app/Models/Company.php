@@ -19,4 +19,14 @@ class Company extends Model
         'address',
     ];
 
+    public function customFields()
+    {
+        return $this->hasMany(CustomField::class);
+    }
+
+    public function customFieldValues()
+    {
+        return $this->hasMany(CustomFieldValue::class);
+    }
+
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\CustomField;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -15,8 +16,8 @@ class CompanyController extends Controller
     private $pagination = 2;
     public function index()
     {
-        $companies = Company::paginate($this->pagination);
-
+        $companies = Company::with('customFields')
+            ->paginate($this->pagination);
         return view('company.index', compact('companies'));
     }
 
@@ -44,6 +45,14 @@ class CompanyController extends Controller
         ]);
 
         $company = Company::create($request->only('name', 'address'));
+
+        foreach ($request->custom_fields as $field) {
+            CustomField::create([
+                'company_id' => $company->id,
+                'field_name' => $field['field_name'],
+                'field_type' => $field['field_type'],
+            ]);
+        }
 
         return redirect()->route('company.index')->with('success', 'Company Added successfully.');
     }
@@ -87,6 +96,12 @@ class CompanyController extends Controller
         ]);
 
         $company = Company::findOrFail($id);
+        foreach ($request->custom_fields as $fieldData) {
+            $company->customFields()->updateOrCreate(
+                ['id' => $fieldData['field_id'] ?? null],
+                ['field_name' => $fieldData['field_name'], 'field_type' => $fieldData['field_type']]
+            );
+        }
         $company->update($request->only('name', 'address'));
 
         return redirect()->route('company.index')->with('success', 'Company Updated successfully.');

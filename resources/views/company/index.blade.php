@@ -26,7 +26,8 @@
                     <th>SN</th>
                     <th>Name</th>
                     <th>Address</th>
-                    <th>Action</th>
+                    <th>Fields Name</th>
+                    <th width="30%">Action</th>
                 </tr>
                 @if(count($companies) > 0)
 
@@ -35,7 +36,13 @@
                         <tr>
                             <td>{{ $loop->index + 1 }}</td>
                             <td>{{ $company->name }}</td>
-                            <td width="60%">{{ $company->address }}</td>
+
+                            <td>{{ $company->address }}</td>
+                            <td>
+                                @if($company->customFields->count())
+                                    {{ $company->customFields->pluck('field_name')->implode(', ') }}
+                                @endif
+                            </td>
                             <td>
                                 <form method="post" action="{{ route('company.destroy', $company->id) }}" onsubmit="return confirm('Are you sure?')">
                                     <a href="{{ route('company.show', $company->id) }}"
